@@ -38,7 +38,7 @@ class Graph:
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
-        self.vertices[vertex_id] = set()
+        self.vertices[vertex_id] = {'n': '?', 's': '?', 'w': '?', 'e': '?'}
 
     def add_edge(self, v1, v2):
         if v1 in self.vertices and v2 in self.vertices:
