@@ -21,42 +21,22 @@ def cross_traverse(player):
     ####### FIRST ROOM #######
     # Add the starting room to the graph.  Vertexes will have the room number as their id
     # directional object as value
-    map_graph.add_vertex(player.current_room.id)
-    # check to see which directions the player can move (get_exits returns an array of available exits)
-    exits = player.current_room.get_exits()
+    # check to see which directions the player can move (get_exits returns an array of available exits
     # choose a random direction from the exits
-    direction = random.choice(exits)
     # save current room as previous room
-    prev_room_id = player.current_room.id
     # move the player into an available room (add the direction to the tracking list)
-    player.travel(direction)
     # update the path with the direction traveled
-    path.append(direction)
     # update the current room's vertex value
-    map_graph.vertices[prev_room_id][0][direction] = player.current_room.id
-    print('Graph:', map_graph.vertices, 'Path:', path,
-          'Current Room:', player.current_room)
 
     ####### DEPTH FIRST TRAVERSE #######
-    while len(exits) > 1:
-        # Add current room to graph
-        map_graph.add_vertex(player.current_room.id)
-        # Create edge
-        map_graph.add_edge(player.current_room.id, prev_room_id)
-        # update current room's vertex value with previous direction
-        map_graph.vertices[player.current_room.id][0][opposite[direction]
-                                                      ] = prev_room_id
-        # check to see which directions the player can move (get_exits returns an array of available exits)
-        exits = player.current_room.get_exits()
-        # choose a random direction from the exits
-        direction = random.choice(exits)
-        # save current room as previous room
-        prev_room_id = player.current_room.id
-        # move the player into an available room (add the direction to the tracking list)
-        player.travel(direction)
-        # update the path with the direction traveled
-        path.append(direction)
-        print('Graph:', map_graph.vertices, 'Path:', path,
-              'Current Room:', player.current_room)
+    # while length of verteces is less than 500
+    # Add current room to graph
+    # Create edge
+    # update current room's vertex value with previous direction
+    # check to see which directions the player can move (get_exits returns an array of available exits)
+    # choose a random direction from the exits
+    # save current room as previous room
+    # move the player into an available room (add the direction to the tracking list)
+    # update the path with the direction traveled
 
     return path
