@@ -52,13 +52,14 @@ def cross_traverse(player):
                                                       ] = prev_room_id
         # check to see which directions the player can move (get_exits returns an array of available exits)
         exits = player.current_room.get_exits(player.origin)
+        # update vertex directions with missing exits
+        update_vertex_exits(exits, map_graph, player)
 
         if len(exits) == 0:
             path_to_unexplored_room_ids = map_graph.bfs(
                 player.current_room.id)
-            print('path to unexplored:', path_to_unexplored_room)
             path_to_unexplored_room = []
-            for id in path_to_unexplored_room:
+            for id in path_to_unexplored_room_ids:
                 if map_graph.vertices[player.current_room.id][0]['n'] == id:
                     path_to_unexplored_room.append('n')
                     continue
@@ -74,8 +75,6 @@ def cross_traverse(player):
             for path_direction in path_to_unexplored_room:
                 player.travel(direction)
             continue
-        # update vertex directions with missing exits
-        update_vertex_exits(exits, map_graph, player)
         # choose a random direction from the exits
         direction = random.choice(exits)
         # save current room as previous room

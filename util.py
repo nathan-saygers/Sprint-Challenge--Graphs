@@ -65,7 +65,10 @@ class Graph:
         while q.size() > 0:
             # Dqueue first vert
             current_vertex = q.dequeue()
-
+            if type(current_vertex) == int:
+                current_vertex = self.vertices[current_vertex]
+            print('current vertex', type(current_vertex))
+            print('current vertex at 2', current_vertex[2])
             # If it's not been visited
             if current_vertex[2] not in visited:
                 # Mark visited

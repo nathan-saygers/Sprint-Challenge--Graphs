@@ -10,6 +10,7 @@ runtime is irrelevan
 
 """
 
-test = {0: {'n': 2, 's': '?', 'w': '?', 'e': '?'}}
+test = 1
 
-print(test[0]['n'])
+if type(test) == int:
+    print(True)
