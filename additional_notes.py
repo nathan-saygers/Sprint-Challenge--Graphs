@@ -6,8 +6,10 @@ Strategies when reaching dead end:
 
 DFT and tracking backtrack should be enough to get MVP
 
-runtime is irrelevant
-
-
+runtime is irrelevan
 
 """
+
+test = {0: {'n': 2, 's': '?', 'w': '?', 'e': '?'}}
+
+print(test[0]['n'])
