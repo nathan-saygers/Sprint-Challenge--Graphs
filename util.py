@@ -38,6 +38,7 @@ class Graph:
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
+        print("vertexid", vertex_id)
         if vertex_id not in self.vertices:
             self.vertices[vertex_id] = [
                 {'n': '?', 's': '?', 'w': '?', 'e': '?'}, set(), vertex_id]
@@ -56,7 +57,6 @@ class Graph:
         # Breadth first traversal
         q = Queue()
         q.enqueue(self.vertices[starting_vertex_id])
-        print('haaalllp', self.vertices[starting_vertex_id])
 
         # Keep track of visited nodes
         visited = set()
@@ -67,18 +67,15 @@ class Graph:
             current_vertex = q.dequeue()
             if type(current_vertex) == int:
                 current_vertex = self.vertices[current_vertex]
-            print('current vertex', type(current_vertex))
-            print('current vertex at 2', current_vertex[2])
             # If it's not been visited
             if current_vertex[2] not in visited:
                 # Mark visited
                 visited.add(current_vertex[2])
-                print("visited", visited)
                 # Queue up the neighbors of the dequeued / visited vertex
-                print("yo", '?' in current_vertex[0].values())
                 if '?' in current_vertex[0].values():
-                    break
-                print(current_vertex[0].values())
+                    return list(visited)
                 for next_vert in self.get_adjacent_vertices(current_vertex[2]):
-                    q.enqueue(next_vert)
-        return list(visited)
+                    if next_vert not in visited:
+                        q.enqueue(next_vert)
+        visited = list(visited)
+        return visited

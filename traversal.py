@@ -43,13 +43,16 @@ def cross_traverse(player):
 
     ####### DEPTH FIRST TRAVERSE #######
     while len(map_graph.vertices) < 500:
+        print(len(map_graph.vertices))
         # Add current room to graph
         map_graph.add_vertex(player.current_room.id)
         # Create edge
         map_graph.add_edge(player.current_room.id, prev_room_id)
         # update current room's vertex value with previous direction
-        map_graph.vertices[player.current_room.id][0][opposite[direction]
-                                                      ] = prev_room_id
+        map_graph.vertices[player.current_room.id][0][player.origin] = prev_room_id
+        map_graph.vertices[prev_room_id][0][direction] = player.current_room.id
+        print('vertex directions after origin set',
+              map_graph.vertices[player.current_room.id][0])
         # check to see which directions the player can move (get_exits returns an array of available exits)
         exits = player.current_room.get_exits(player.origin)
         # update vertex directions with missing exits
@@ -64,19 +67,31 @@ def cross_traverse(player):
                     path_to_unexplored_room.append('n')
                     continue
                 elif map_graph.vertices[player.current_room.id][0]['s'] == id:
+
                     path_to_unexplored_room.append('s')
                     continue
                 elif map_graph.vertices[player.current_room.id][0]['e'] == id:
+
                     path_to_unexplored_room.append('e')
                     continue
                 elif map_graph.vertices[player.current_room.id][0]['w'] == id:
                     path_to_unexplored_room.append('w')
                     continue
             for path_direction in path_to_unexplored_room:
-                player.travel(direction)
+                path.append(path_direction)
+                player.origin = opposite[path_direction]
+                prev_room_id = player.current_room.id
+                player.travel(path_direction)
+
             continue
         # choose a random direction from the exits
-        direction = random.choice(exits)
+        print('ORIGIN', player.origin)
+
+        direction = next_direction(unexplored_exits(
+            exits, map_graph.vertices[player.current_room.id][0]), exits, map_graph.vertices[player.current_room.id][0], map_graph)
+
+        # direction = random.choice(exits)
+
         # save current room as previous room
         prev_room_id = player.current_room.id
         # Set player origin based on direction
@@ -85,8 +100,8 @@ def cross_traverse(player):
         player.travel(direction)
         # update the path with the direction traveled
         path.append(direction)
-        print('Graph:', map_graph.vertices, 'Path:', path,
-              'Current Room:', player.current_room)
+        # print('Graph:', map_graph.vertices, 'Path:', path,
+        #       'Current Room:', player.current_room)
 
     return path
 
@@ -104,3 +119,49 @@ def update_vertex_exits(exits, graph, player):
         graph.vertices[player.current_room.id][0]['w'] = None
     if player.origin != '':
         exits.remove(player.origin)
+
+
+def next_direction(unexplored_exits, exits, graph_room, map_graph):
+    if len(unexplored_exits) == 0:
+        path_arrays = []
+        shortest_path = []
+        if 'w' in exits:
+            path_arrays.append(((map_graph.bfs(
+                graph_room['w'])), 'w'))
+        if 'n' in exits:
+            path_arrays.append(((map_graph.bfs(
+                graph_room['n'])), 'n'))
+        if 'e' in exits:
+            path_arrays.append(((map_graph.bfs(
+                graph_room['e'])), 'e'))
+        if 's' in exits:
+            path_arrays.append(((map_graph.bfs(
+                graph_room['s'])), 's'))
+        for path_array in path_arrays:
+            if len(shortest_path) == 0:
+                shortest_path = path_array
+            if len(path_array[0]) < len(shortest_path[0]):
+                shortest_path = path_array
+        return shortest_path[1]
+    elif 'w' in unexplored_exits:
+        return 'w'
+    elif 'n' in unexplored_exits:
+        return 'n'
+    elif 'e' in unexplored_exits:
+        return 'e'
+    elif 's' in unexplored_exits:
+        return 's'
+
+
+def unexplored_exits(exits, graph_room):
+    print("GRAF ROO", graph_room, "exits", exits)
+    unexplored_exits = []
+    if 'n' in exits and graph_room['n'] == '?':
+        unexplored_exits.append('n')
+    if 's' in exits and graph_room['s'] == '?':
+        unexplored_exits.append('s')
+    if 'e' in exits and graph_room['e'] == '?':
+        unexplored_exits.append('e')
+    if 'w' in exits and graph_room['w'] == '?':
+        unexplored_exits.append('w')
+    return unexplored_exits
